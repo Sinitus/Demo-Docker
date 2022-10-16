@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1111:80"
+    restart: always
+    volumes:
+      - ./app:/var/www/html
+
+  database:
+    image:  mariadb
+    restart: always
+    environment:
+      MARIADB_DATABASE: data
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - ./migration/dump.sql:/docker-entrypoint-initdb.d/db_data.sql
+      - db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "2222:8080"
+
+volumes:
+  db_data:
+
